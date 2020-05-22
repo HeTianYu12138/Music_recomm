@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>趣音悦</title>
+    <link rel="icon" type="image/ico" href="/static/images/format.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+    <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/echarts4.min.js"></script>
+    <script type="text/javascript" src="/static/js/echarts-gl.js"></script>
+    <script type="text/javascript" src="/static/js/echarts.china.js"></script>
+    <script type="text/javascript" src="/static/js/echarts-wordcloud.min.js"></script>
+    <script type="text/javascript" src="/static/js/audio.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/audio.css" />
+</head>
+<style>
+    .menu_search>.search_sea{
+    display: inline-block;
+    border:none;
+    outline:none;
+    width:60px;
+    padding:5px 30px 5px 10px;
+    border-radius:10px;
+    background-color:rgba(0,0,0,0.5);
+    color:#ccc;
+    text-align: center;
+}
+
+.menu_search>.search_sea:hover {
+    background-color: rgba(70,26,26,0.5);
+    color: white;
+}
+
+a#topbar{
+        padding: 10px 20px;
+        outline: none;
+        border:1px solid #FDF6E3;
+        transition:color,background-color .4s;
+        margin: 40px 50px;
+        border-radius: 5px;
+        background-color: transparent;
+        color: #FDF6E3;
+}
+a#topbar:hover{
+    color: #000000;
+    background-color: #FDF6E3;
+    cursor: pointer;
+}
+button#feed{
+        display:none;
+        padding: 10px 20px;
+        outline: none;
+        border:1px solid #FDF6E3;
+        transition:color,background-color .4s;
+        margin: 124px;
+        border-radius: 5px;
+        background-color: transparent;
+        color: #FDF6E3;
+}
+button#feed:hover{
+    color: #000000;
+    background-color: #FDF6E3;
+    cursor: pointer;
+}
+</style>
+
+<body onselectstart="return false">
+    <form action="{{url_for('recom')}}" method="post">
+        <header>
+            <!-- page_menu 页面顶部菜单 -->
+            <div class="page_menu clearfix">
+                <div class="menu_search">
+                    <input type="text" placeholder="探索用户" autofocus="" id="inpSearch" class="search_inp" name="user" />
+                    <input type="submit" value="搜索" id="seaSearch" class="search_sea" />
+                    <a id='topbar'href="{{url_for('hotsongs')}}">大家都在听</a>
+                    <button id='feed'type='button'>给我们反馈</button>
+                </div>
+            </div>
+        </header>
+    </form>
+    <!-- page_list 页面左侧歌单 -->
+    <div class="page_list">
+        <div class="list_container" style="height:100%;" id="listContainer">
+            <div class="list list_recommend">
+                <p class="title" style="">数据统计可视化</p>
+                <div class="btngroups">
+                    <a href="{{url_for('song_comment_datedef')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;歌曲点赞数走势</a><br>
+                    <a href="{{url_for('song_user_age_rangedef')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;歌曲评论的用户年龄</a><br>
+                    <a href="{{url_for('same_taste_user_age_rangedef')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;兴趣相投的用户年龄</a><br>
+                    <a href="{{url_for('song_user_area_rangedef')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;用户地域分布</a><br>
+                    <a href="{{url_for('tagwordcloud')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;歌单标签词云</a><br>
+                    <a href="{{url_for('commentwordclouddef')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;歌曲评论词云</a><br>
+                    <a href="{{url_for('commentlikedrangedef')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;歌曲评论点赞</a><br>
+                    <a href="{{url_for('songstatics')}}"class="btn list_create_001"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;歌曲统计分析</a><br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page_main R_page" id="pageMain">
+        {% block body %} {% endblock %}
+    </div>
+    
+    <footer>Copyright @ Music</footer>
+</body>
+
+</html>

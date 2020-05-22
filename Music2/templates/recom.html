@@ -1,0 +1,206 @@
+{% extends 'layout.html' %}
+{% block body %}
+<style type="text/css">
+table {
+
+    border-collapse: collapse;
+
+    margin: 0 auto;
+
+    text-align: center;
+
+}
+
+table td,
+table th {
+
+    border: 1px solid #cad9ea;
+
+    color: #666;
+
+    height: 30px;
+
+}
+
+table thead th {
+
+    background-color: #CCE8EB;
+
+    width: 100px;
+
+}
+
+table tr:nth-child(odd) {
+
+    background: #fff;
+
+}
+
+table tr:nth-child(even) {
+
+    background: #F5FAFA;
+
+}
+
+button {
+    padding: 10px 20px;
+    outline: none;
+    border: 1px solid #FDF6E3;
+    transition: color, background-color .4s;
+    margin: 40px 50px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #FDF6E3;
+}
+
+button:hover {
+    color: #000000;
+    background-color: #FDF6E3;
+    cursor: pointer;
+}
+</style>
+<br>
+<div id="item" class="main_container" align="center">
+    <div>
+        <h1>根据用户{{statics['u']}}喜好推荐30首歌曲如下</h1>
+    </div>
+    <table class='mytb' border="1" width="60%">
+        <tr>
+            <th>歌名</th>
+            <th>歌手</th>
+            <th>链接</th>
+            <th>反馈(请选择您满意的推荐歌曲以帮助我们更好地了解您)</th>
+        </tr>
+        {% for item in statics['data'] %}
+        <tr>
+            <td align="center">{{ item['name'] }}</td>
+            <td align="center">
+                {% for singer in item['artist'] %}
+                {{ singer }}&nbsp
+                {% endfor %}
+            </td>
+            <td align="center"><a href="http://music.163.com/song/media/outer/url?id={{item['id']}}">▶</a></td>
+            <td>
+                <input type="checkbox" name="fe" value="{{item['id']}}">❤喜欢❤
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="audio-box" width="80%">
+    <div class="audio-container">
+        <div class="audio-view">
+            <div class="audio-cover"></div>
+            <div class="audio-body">
+                <h3 class="audio-title">未知歌曲</h3>
+                <div class="audio-backs">
+                    <div class="audio-this-time">00:00</div>
+                    <div class="audio-count-time">00:00</div>
+                    <div class="audio-setbacks">
+                        <i class="audio-this-setbacks">
+                            <span class="audio-backs-btn"></span>
+                        </i>
+                        <span class="audio-cache-setbacks">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="audio-btn">
+                <div class="audio-select">
+                    <div class="audio-prev"></div>
+                    <div class="audio-play"></div>
+                    <div class="audio-next"></div>
+                    <div class="audio-menu"></div>
+                    <div class="audio-volume"></div>
+                </div>
+                <div class="audio-set-volume">
+                    <div class="volume-box">
+                        <i><span></span></i>
+                    </div>
+                </div>
+                <div class="audio-list">
+                    <div class="audio-list-head">
+                        <p>歌单</p>
+                        <span class="menu-close">关闭</span>
+                    </div>
+                    <ul class="audio-inline">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#feed').show('slow', function() {
+
+    });
+    var song = new Array(); 
+    {% for item in statics['data'] %}
+    songi = { 'cover': '', 'src': "http://music.163.com/song/media/outer/url?id={{item['id']}}", 'title': '' };
+    title = "{{item['name']}}            "; 
+    {% for singer in item['artist'] %}
+    title = title + " / " + "{{singer}}";
+    {% endfor %}
+    songi['title'] = title;
+    song.push(songi); 
+    {% endfor %}
+
+    var audioFn = audioPlay({
+        song: song,
+        autoPlay: false //是否立即播放第一首，autoPlay为true且song为空，会alert文本提示并退出
+    });
+
+    /* 向歌单中添加新曲目，第二个参数true为新增后立即播放该曲目，false则不播放 */
+    // audioFn.newSong({
+    //     'cover': 'images/cover5.jpg',
+    //     'src': 'http://www.datouwang.com/uploads/file/yinxiao/2016/yinxiao138.mp3',
+    //     'title': '赌神出场背景音乐'
+    // }, false);
+
+    /* 暂停播放 */
+    // audioFn.stopAudio();
+
+    // /* 开启播放 */
+    // audioFn.playAudio();
+
+    // /* 选择歌单中索引为3的曲目(索引是从0开始的)，第二个参数true立即播放该曲目，false则不播放 */
+    // audioFn.selectMenu(3,true);
+
+    //  查看歌单中的曲目 
+    // console.log(audioFn.song);
+
+    // /* 当前播放曲目的对象 */
+    // console.log(audioFn.audio);
+    $('#feed').click(function(event) {
+        var chk_value = []; //定义一个数组    
+        $('input[name="fe"]:checked').each(function() { //遍历每一个名字为interest的复选框，其中选中的执行函数    
+            chk_value.push($(this).val()); //将选中的值添加到数组chk_value中   
+        })
+        var u = "{{statics['u']}}"
+        var data = { "ids": chk_value, "u": u }
+        console.info(JSON.stringify(data))
+        $.ajax({
+                url: "{{url_for('feed')}}",
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                traditional: true,
+                contentType: 'application/json; charset=UTF-8'
+            })
+            .done(function() {
+                alert('O(∩_∩)O反馈成功O(∩_∩)O')
+            })
+            .fail(function(jqXHR, textStatus) {
+                alert('O(∩_∩)O反馈失败O(∩_∩)O'+textStatus)
+                console.log(textStatus)
+            })
+            .always(function() {
+                console.log("complete");
+            });
+
+    });
+
+});
+</script>
+{% endblock %}

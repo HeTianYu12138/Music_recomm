@@ -1,0 +1,107 @@
+<div class="audio-box">
+	<div class="audio-container">
+		<div class="audio-view">
+			<div class="audio-cover" ></div>
+			<div class="audio-body">
+				<h3 class="audio-title">未知歌曲</h3>
+				<div class="audio-backs">
+					<div class="audio-this-time">00:00</div>
+					<div class="audio-count-time">00:00</div>
+					<div class="audio-setbacks">
+						<i class="audio-this-setbacks">
+							<span class="audio-backs-btn"></span>
+						</i>
+						<span class="audio-cache-setbacks">
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="audio-btn">
+				<div class="audio-select">
+					<div class="audio-prev"></div>
+					<div class="audio-play"></div>
+					<div class="audio-next"></div>
+					<div class="audio-menu"></div>
+					<div class="audio-volume"></div>
+				</div>
+				<div class="audio-set-volume">
+					<div class="volume-box">
+						<i><span></span></i>
+					</div>
+				</div>
+				<div class="audio-list">
+					<div class="audio-list-head">
+						<p>歌单</p>
+						<span class="menu-close">关闭</span>
+					</div>
+					<ul class="audio-inline">
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/audio.js"></script>
+<script type="text/javascript">
+$(function(){
+
+	var song = [
+		{
+			'cover' : 'images/cover2.jpg',
+			'src' : 'http://www.datouwang.com/uploads/file/yinxiao/2017/yinxiao372.mp3',
+			'title' : '运动员进行曲'
+		},
+		{
+			'cover' : 'images/cover.png',
+			'src' : 'http://www.datouwang.com/uploads/file/yinxiao/2016/yinxiao210.mp3',
+			'title' : '金玉满堂欢快背景音乐'
+		},
+		{
+			'cover' : 'images/cover1.jpg',
+			'src' : 'http://www.datouwang.com/uploads/file/yinxiao/2016/yinxiao197.mp3',
+			'title' : '贪吃蛇大作战背景音乐'
+		},
+		{
+			'cover' : 'images/cover3.jpg',
+			'src' : 'http://www.datouwang.com/uploads/file/yinxiao/2016/yinxiao172.mp3',
+			'title' : '央视春节联欢晚会春节序曲音乐'
+		},
+		{
+			'cover' : 'images/cover4.jpg',
+			'src' : 'http://www.datouwang.com/uploads/file/yinxiao/2016/yinxiao158.mp3',
+			'title' : '非诚勿扰男嘉宾出场音乐'
+		}
+	];
+
+	var audioFn = audioPlay({
+		song : song,
+		autoPlay : true  //是否立即播放第一首，autoPlay为true且song为空，会alert文本提示并退出
+	});
+
+	/* 向歌单中添加新曲目，第二个参数true为新增后立即播放该曲目，false则不播放 */
+	audioFn.newSong({
+		'cover' : 'images/cover5.jpg',
+		'src' : 'http://www.datouwang.com/uploads/file/yinxiao/2016/yinxiao138.mp3',
+		'title' : '赌神出场背景音乐'
+	},false);
+
+	/* 暂停播放 */
+	//audioFn.stopAudio();
+
+	/* 开启播放 */
+	//audioFn.playAudio();
+
+	/* 选择歌单中索引为3的曲目(索引是从0开始的)，第二个参数true立即播放该曲目，false则不播放 */
+	//audioFn.selectMenu(3,true);
+
+	/* 查看歌单中的曲目 */
+	//console.log(audioFn.song);
+
+	/* 当前播放曲目的对象 */
+	//console.log(audioFn.audio);
+});
+
+</script>
+<!-- 代码 结束 -->

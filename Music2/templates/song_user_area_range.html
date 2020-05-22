@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% block body %}
+<form action="{{url_for('song_user_area_range')}}" method="post">
+    <div class="menu_search" style="background-color: #FDF6E3">
+        <input type="text" style="color: #fff" placeholder="探索歌曲" autofocus="" id="inpSearch" class="search_inp" name="id" />
+        <input type="submit" value="搜索" id="seaSearch" class="search_sea" />
+    </div>
+</form>
+<div id="item" class="main_container">
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    var myChart = echarts.init(document.getElementById('item'));
+    data = {{statics|tojson}};
+    option = {
+        backgroundColor: '#FDF6E3',
+    title : {
+        text: '歌曲《{{statics["name"]}}》的用户地域分布',
+        left: 'center',
+        top: 'top'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter : function (params) {
+            var value = (params.value + '').split('.');
+            value = value[0].replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g, '$1,')
+                    + '.' + value[1];
+            return params.seriesName + '<br/>' + params.name + ' : ' + value;
+        }
+    },
+    toolbox: {
+        show : true,
+        orient : 'vertical',
+        left: 'right',
+        top: 'center',
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    visualMap: {
+        type: 'continuous',
+        min: 0,
+        max: data['maxvalue'],
+        text:['High','Low'],
+        realtime: false,
+        calculable : true,
+        color: ['orangered','yellow','lightskyblue']
+    },
+    series : [
+        {
+            name: '歌曲播放量',
+            type: 'map',
+            mapType: 'china',
+            roam: true,
+            itemStyle:{
+                emphasis:{label:{show:true}}
+            },
+            data:data['data']
+        }
+    ]
+};
+
+    myChart.setOption(option);
+})
+// 基于准备好的dom，初始化echarts实例
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block body %}
+<form action="{{url_for('commentlikedrange')}}" method="post">
+    <div class="menu_search" style="background-color: #FDF6E3">
+        <input type="text" style="color: #fff" placeholder="探索用户" autofocus="" id="inpSearch" class="search_inp" name="id" />
+        <input type="submit" value="搜索" id="seaSearch" class="search_sea" />
+    </div>
+</form>
+<div id="item" class="main_container">
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    var myChart = echarts.init(document.getElementById('item'));
+    data = {{ statics | tojson }};
+    option = {
+        backgroundColor: '#FDF6E3',
+        title: {
+            text: '歌曲《{{statics['name']}}》点赞分布',
+            subtext: '来源网易云音乐',
+            x: 'center',
+            textStyle: {
+                color: '#FCB551'
+            }
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['0~10赞', '10~50赞', '50~100赞', '100~500赞', '500~1000赞', '1000赞以上']
+        },
+        series: [{
+            name: '访问来源',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: [
+                { value: data['0~10'], name: '0~10赞' },
+                { value: data['10~50'], name: '10~50赞' },
+                { value: data['50~100'], name: '50~100赞' },
+                { value: data['100~200'], name: '100~500赞' },
+                { value: data['200~1000'], name: '500~1000赞' },
+                { value: data['1000~'], name: '1000赞以上' }
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    myChart.setOption(option);
+})
+// 基于准备好的dom，初始化echarts实例
+</script>
+{% endblock %}

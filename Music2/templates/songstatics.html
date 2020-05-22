@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+{% block body %}
+<form action="{{url_for('songstatics')}}" method="post">
+    <div class="menu_search" style="background-color: #FDF6E3">
+        <input type="text" style="color: #fff" placeholder="探索歌曲" autofocus="" id="inpSearch" class="search_inp" name="id" />
+        <input type="submit" value="搜索" id="seaSearch" class="search_sea" />
+    </div>
+</form>
+<div id="item" class="main_container">
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    var myChart = echarts.init(document.getElementById('item'));
+    data = {{data|tojson}}
+     option = {
+        backgroundColor:'#000000',
+        title: {
+            text: '3d散点图',
+        },
+        xAxis3D:{
+            max:data['maxplaytime'],
+            name:'播放时长(s)',
+            type: 'value',
+        },
+        yAxis3D:{
+           type: 'category',
+           name:'发布时间',
+        },
+        zAxis3D:{
+            max:data['maxvalue'],
+            name:'喜欢人数',
+           type: 'value'
+        },
+        grid3D: {
+            axisLine: {
+                lineStyle: {
+                    color: '#fff'
+                }
+            },
+            axisPointer: {
+                lineStyle: {
+                    color: '#ffbd67'
+                }
+            },
+        },
+        series : [
+            {
+                type: 'scatter3D', //设置图表类型为3d散点图
+                data: data['data']
+            }
+        ]
+     }
+    myChart.setOption(option);
+})
+// 基于准备好的dom，初始化echarts实例
+</script>
+{% endblock %}
