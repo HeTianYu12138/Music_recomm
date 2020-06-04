@@ -5,6 +5,7 @@ import jieba
 import json
 import time
 from config import *
+from pre_clustering import *
 import pymysql.cursors
 import pymysql
 from flask import *
@@ -47,10 +48,13 @@ def read_item_name():
         sname_to_rid[item['songname']] = item['songid']
     return sid_to_name,sname_to_rid
 #训练模型
-def get_model(user_based=False):
+def get_model(user_based=False,cluster=-1):
     #载入用户歌曲评分数据
     reader = Reader(sep=',',rating_scale=(45,100),line_format='user item rating')
-    data = Dataset.load_from_file(r'C:\Users\89556\Desktop\Music\static\data\user_score.txt',reader)
+    if cluster in range(CLUSTER_NUM):
+        data = Dataset.load_from_file(r'C:\\Users\\89556\\Desktop\\Music2\\Music2\\static\\data\\user_score'+str(cluster)+'.txt',reader)
+    else:
+        data = Dataset.load_from_file(r'C:\\Users\\89556\\Desktop\\Music2\\Music2\\static\\data\\user_score.txt',reader)
     #建立训练集
     train_set = data.build_full_trainset()
     #使用pearson_baseline方式计算相似度  False以item为基准计算相似度 本例为电影之间的相似度
@@ -116,6 +120,9 @@ def recom():
     global algos
     data = request.form
     user = '1346233343'
+    cluster_result = preclustering()
+    cluster = cluster_result[user]
+    algos = get_model(cluster=cluster)
     if data['user']:
         user = data['user']
         print('user'+user)
